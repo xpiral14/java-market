@@ -17,13 +17,7 @@ public class ProdutoController {
 
     public ProdutoController(HashMap<Integer, Produto> produtos, HashMap<Integer, Categoria> categorias) {
         this.produtos = produtos;
-        this.categoriaController = new CategoriaController(categorias);
-    }
-
-    public void adicionaProduto(Produto produto) {
-
-        produtos.put(produto.getId(), produto);
-
+        this.categoriaController = new CategoriaController(categorias, produtos);
     }
 
     public void adicionaProduto() {
@@ -58,13 +52,15 @@ public class ProdutoController {
 
             produtos.put(id, novoProduto);
         } catch (CategoriaNaoEncontradaException e) {
+            System.out.println("erro");
             System.out.println(e.getMessage());
         }
-
+        System.out.println("produto adicionado com sucesso");
     }
 
-    public void deletaProduto(int produtoId) throws ProdutoNaoEncontradoException {
-
+    public void deletaProduto() throws ProdutoNaoEncontradoException {
+        System.out.println("Digite o codigo do produto");
+        int produtoId = inp.nextInt();
         Produto ProdutoEncontrado = produtos.get(produtoId);
 
         if (ProdutoEncontrado == null) {
@@ -72,11 +68,13 @@ public class ProdutoController {
         }
 
         produtos.remove(produtoId);
+        System.out.println("produto removido com sucesso");
 
     }
 
-    public Produto pegarProduto(int produtoId) throws ProdutoNaoEncontradoException {
-
+    public Produto pegarProduto() throws ProdutoNaoEncontradoException {
+        System.out.println("Digite o codigo do produto");
+        int produtoId = inp.nextInt();
         Produto ProdutoEncontrado = produtos.get(produtoId);
 
         if (ProdutoEncontrado == null) {
@@ -94,7 +92,9 @@ public class ProdutoController {
         }
     }
 
-    public void editaProduto(int produtoId) throws ProdutoNaoEncontradoException, CategoriaNaoEncontradaException{
+    public void editaProduto() throws ProdutoNaoEncontradoException, CategoriaNaoEncontradaException {
+        System.out.println("Digite o codigo do produto");
+        int produtoId = inp.nextInt();
         String nome;
         int quantidade;
         double preco;
@@ -103,14 +103,27 @@ public class ProdutoController {
         Categoria categoria;
         int categoriaId;
 
-        System.out.println("Digite o nome");
-        nome = inp.next();
-        System.out.println("Digite a quantidade");
-        quantidade = inp.nextInt();
-        System.out.println("Digite o preco");
-        preco = inp.nextDouble();
-        System.out.println("Digite o desconto");
-        desconto = inp.nextDouble();
+        do {
+
+            System.out.println("Digite o nome");
+            nome = inp.next();
+        } while (nome.isEmpty());
+
+        do {
+            System.out.println("Digite a quantidade");
+            quantidade = inp.nextInt();
+        } while (quantidade <= 0);
+
+        do {
+            System.out.println("Digite o preco");
+            preco = inp.nextDouble();
+
+        } while (preco <= 0);
+
+        do {
+            System.out.println("Digite o desconto");
+            desconto = inp.nextDouble();
+        } while (desconto < 0);
 
         do {
             System.out.println("Digite o codigo de barras");
@@ -136,6 +149,19 @@ public class ProdutoController {
         } catch (Exception e) {
             throw e;
         }
+        System.out.println("Produto editado com sucesso");
+    }
+
+    public void verProduto() throws ProdutoNaoEncontradoException {
+        System.out.println("Digite o codigo do produto");
+        int produtoId = inp.nextInt();
+
+        Produto produtoEncontrado = produtos.get(produtoId);
+
+        if (produtoEncontrado == null)
+            throw new ProdutoNaoEncontradoException();
+
+        System.out.println(produtoEncontrado);
 
     }
 
