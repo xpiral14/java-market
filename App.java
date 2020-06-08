@@ -7,6 +7,8 @@ import controllers.ProdutoController;
 import models.Caixa;
 import models.Categoria;
 import models.Produto;
+import seeds.CategoriaSeed;
+import seeds.ProdutoSeed;
 import textos.Menu;
 
 public class App {
@@ -26,6 +28,9 @@ public class App {
     private CaixaController caixaController = new CaixaController(caixas);
 
     public void iniciar() {
+        ProdutoSeed.popular(produtos);
+        CategoriaSeed.popular(categorias);
+        
         int opcaoSelecionda = -1;
         do {
             try {
