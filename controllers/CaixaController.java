@@ -7,6 +7,7 @@ import exceptions.NaoEncontradoException;
 import models.Caixa;
 import models.Carrinho;
 import models.Produto;
+import utils.Formatador;
 
 public class CaixaController {
     
@@ -35,10 +36,10 @@ public class CaixaController {
             System.out.println(produto.getNome());
             valorCarrinho +=  produto.getPreco();
         }
-        System.out.println("O valor total do carrinho foi de: " + valorCarrinho);
+        System.out.println("O valor total do carrinho foi de:  " + Formatador.decimal(valorCarrinho));
         caixa.setMontante(valorCarrinho);
         caixa.andarFila();
-
+        primeiroCarrinho.esvaziarCarrinho();
     }
 
     public void adicionaCarrinho(Carrinho carrinho) throws NaoEncontradoException{

@@ -82,7 +82,7 @@ public class Produto {
 
     @Override
     public String toString() {
-        return "Produto [categoria=" + categoria + ", codigoBarras=" + codigoBarras + ", desconto=" + desconto + ", id="
+        return "Produto [categoria=" + ( categoria == null ? "Sem categoria" : categoria ) + ", codigoBarras=" + codigoBarras + ", desconto=" + desconto + ", id="
                 + id + ", nome=" + nome + ", preco=" + preco + ", quantidade=" + quantidade + "]";
     }
 

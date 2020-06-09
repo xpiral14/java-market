@@ -9,6 +9,8 @@ import models.Caixa;
 import models.Carrinho;
 import models.Categoria;
 import models.Produto;
+import repositorios.repositoriosImpl.CategoriaRepositorioImpl;
+import repositorios.repositoriosImpl.ProdutoRepositorioImpl;
 import seeds.CategoriaSeed;
 import seeds.ProdutoSeed;
 import textos.Menu;
@@ -26,10 +28,12 @@ public class App {
 
     private Carrinho carrinho = new Carrinho();
 
-    private CategoriaController categoriaController = new CategoriaController(categorias, produtos);
+    private ProdutoRepositorioImpl produtoRepositorioImpl = new ProdutoRepositorioImpl(produtos);
+    private CategoriaRepositorioImpl categoriaRepositorioImpl = new CategoriaRepositorioImpl(categorias);
+    
+    private CategoriaController categoriaController = new CategoriaController(categoriaRepositorioImpl, produtoRepositorioImpl);
 
-    private ProdutoController produtoController = new ProdutoController(produtos, categorias);
-
+    private ProdutoController produtoController = new ProdutoController(produtoRepositorioImpl, categoriaRepositorioImpl);
     
     private MercadoController mercadoController = new MercadoController(produtos, carrinho);
 

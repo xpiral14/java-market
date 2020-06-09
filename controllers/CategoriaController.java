@@ -1,22 +1,24 @@
 package controllers;
 
-import java.util.HashMap;
 import java.util.Scanner;
 
-import exceptions.CategoriaNaoEncontradaException;
+import exceptions.NaoEncontradoException;
 import exceptions.RelacaoExisteException;
 import models.Categoria;
 import models.Produto;
+import repositorios.repositoriosImpl.CategoriaRepositorioImpl;
+import repositorios.repositoriosImpl.ProdutoRepositorioImpl;
+import utils.RandomUtils;
 
 public class CategoriaController {
 
     public Scanner inp = new Scanner(System.in);
-    private HashMap<Integer, Categoria> categorias;
-    private HashMap<Integer, Produto> produtos;
+    private CategoriaRepositorioImpl categoriaRepositorio;
+    private ProdutoRepositorioImpl produtoRepositorio;
 
-    public CategoriaController(HashMap<Integer, Categoria> categorias, HashMap<Integer, Produto> produtos) {
-        this.categorias = categorias;
-        this.produtos = produtos;
+    public CategoriaController(CategoriaRepositorioImpl categoriaRepositorio, ProdutoRepositorioImpl produtoRepositorio) {
+        this.categoriaRepositorio = categoriaRepositorio;
+        this.produtoRepositorio = produtoRepositorio;
     }
 
     public void adicionaCategoria() {
@@ -24,73 +26,56 @@ public class CategoriaController {
         String categoriaNome;
         System.out.println("Digite o nome da categoria");
         categoriaNome = inp.next();
-        categoriaId = categorias.size();
+        categoriaId = RandomUtils.intervalo(1, 10000);
 
-        categorias.put(categoriaId, new Categoria(categoriaId, categoriaNome));
-
+        categoriaRepositorio.criar(new Categoria(categoriaId, categoriaNome));
+        
+        System.out.println("Categoria adicionada com sucesso.");
     }
 
-    public void deletaCategoria() throws RelacaoExisteException {
+    public void deletaCategoria() throws RelacaoExisteException, NaoEncontradoException {
         System.out.println("Digite o codigo do categoria");
         int categoriaId = inp.nextInt();
-        Categoria categoriaEncontrada = categorias.get(categoriaId);
+        Categoria categoriaEncontrada = categoriaRepositorio.buscarPorIdOuFalhar(categoriaId);
 
-        for (int produtoId : produtos.keySet()) {
-            if (produtos.get(produtoId).getCategoria().getId() == categoriaId) {
+        for (Produto produto : produtoRepositorio.buscarTodos()) {
+            if (produto.getCategoria() != null && produto.getCategoria().equals(categoriaEncontrada)) {
                 throw new RelacaoExisteException(
                         String.format("Relacao entre %s e %s ainda existe", "categoria", "produto"));
             }
         }
-        if (categoriaEncontrada != null) {
-            categorias.remove(categoriaId);
-        }
 
+        categoriaRepositorio.deletar(categoriaEncontrada.getId());
+        System.out.println("Categoria deletada com sucesso.");
+        
     }
-
-    public Categoria pegarCategoria(int categoriaId) throws CategoriaNaoEncontradaException {
-
-        Categoria categoriaEncontrada = categorias.get(categoriaId);
-
-        if (categoriaEncontrada == null) {
-            throw new CategoriaNaoEncontradaException();
-        }
-
-        return categoriaEncontrada;
-    }
-
+    
+    
     public void mostrarCategorias() {
-
-        for (int categoriaId : categorias.keySet()) {
-
-            System.out.println(categorias.get(categoriaId));
+        for (Categoria categoria : categoriaRepositorio.buscarTodos()) {
+            System.out.println(categoria);
         }
     }
-
-    public void editaCategoria() throws CategoriaNaoEncontradaException {
+    
+    public void editaCategoria() throws NaoEncontradoException {
         System.out.println("Digite o codigo do categoria");
         int categoriaId = inp.nextInt();
-
+        
         System.out.println("Digite o nome");
         String nome = inp.next();
-
-        Categoria categoriaEncontrada = categorias.get(categoriaId);
-
-        if (categoriaEncontrada == null) {
-            throw new CategoriaNaoEncontradaException();
-        }
-
+        
+        Categoria categoriaEncontrada = categoriaRepositorio.buscarPorIdOuFalhar(categoriaId);
+        
         categoriaEncontrada.setNome(nome);
-
+        
+        categoriaRepositorio.atualizar(categoriaEncontrada.getId(),categoriaEncontrada);
+        System.out.println("Categoria editada com sucesso.");
     }
 
-    public void verCategoria() throws CategoriaNaoEncontradaException {
+    public void verCategoria() throws NaoEncontradoException {
         System.out.println("Digite o codigo do categoria");
         int categoriaId = inp.nextInt();
-        Categoria categoriaEncontrada = categorias.get(categoriaId);
-
-        if (categoriaEncontrada == null)
-            throw new CategoriaNaoEncontradaException();
-
+        Categoria categoriaEncontrada = categoriaRepositorio.buscarPorIdOuFalhar(categoriaId);
         System.out.println(categoriaEncontrada);
 
     }

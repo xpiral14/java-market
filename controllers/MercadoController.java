@@ -68,11 +68,11 @@ public class MercadoController {
 			// se o id do produto na posição i for igual ao id passado no parâmetro
 			// remove da lista de produtos.
 			if(carrinho.getProdutos().get(i).getId() == produto.getId()){
+                System.out.println("To aqui");
 				carrinho.removeProduto(i);
 				break;
 			}
 		}
-        carrinho.removeProduto(produto.getId());
 
         System.out.println("Produto removido com sucesso");
     } 

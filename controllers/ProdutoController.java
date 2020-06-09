@@ -1,26 +1,25 @@
 package controllers;
 
-import java.util.HashMap;
 import java.util.Scanner;
-
-import exceptions.CategoriaNaoEncontradaException;
-import exceptions.ProdutoNaoEncontradoException;
+import exceptions.NaoEncontradoException;
 import models.Categoria;
-// import exceptions.ProdutoNaoEncontradaException;
 import models.Produto;
+import repositorios.repositoriosImpl.CategoriaRepositorioImpl;
+import repositorios.repositoriosImpl.ProdutoRepositorioImpl;
+import utils.RandomUtils;
 
 public class ProdutoController {
 
     public Scanner inp = new Scanner(System.in);
-    private HashMap<Integer, Produto> produtos;
-    private CategoriaController categoriaController;
+    private CategoriaRepositorioImpl categoriaRepositorio;
+    private ProdutoRepositorioImpl produtoRepositorio;
 
-    public ProdutoController(HashMap<Integer, Produto> produtos, HashMap<Integer, Categoria> categorias) {
-        this.produtos = produtos;
-        this.categoriaController = new CategoriaController(categorias, produtos);
+    public ProdutoController(ProdutoRepositorioImpl  produtoRepositorio, CategoriaRepositorioImpl categoriaRepositorio) {
+        this.produtoRepositorio = produtoRepositorio;
+        this.categoriaRepositorio = categoriaRepositorio;
     }
 
-    public void adicionaProduto() {
+    public void adicionaProduto() throws NaoEncontradoException {
         int id;
         String nome;
         int quantidade;
@@ -31,7 +30,7 @@ public class ProdutoController {
         int categoriaId;
 
         Produto novoProduto;
-        id = produtos.size();
+        id = RandomUtils.intervalo(1, 1000);
         System.out.println("Digite o nome");
         nome = inp.next();
         System.out.println("Digite a quantidade");
@@ -46,53 +45,40 @@ public class ProdutoController {
 
         System.out.println("Digite o codigo da categoria");
         categoriaId = inp.nextInt();
-        try {
-            categoria = categoriaController.pegarCategoria(categoriaId);
-            novoProduto = new Produto(id, nome, quantidade, preco, desconto, codigoBarras, categoria);
-
-            produtos.put(id, novoProduto);
-        } catch (CategoriaNaoEncontradaException e) {
-            System.out.println("erro");
-            System.out.println(e.getMessage());
-        }
+    
+        categoria = categoriaRepositorio.buscarPorId(categoriaId);
+        novoProduto = new Produto(id, nome, quantidade, preco, desconto, codigoBarras, categoria);
+        produtoRepositorio.criar(novoProduto);
+   
         System.out.println("produto adicionado com sucesso");
     }
 
-    public void deletaProduto() throws ProdutoNaoEncontradoException {
+    public void deletaProduto() throws NaoEncontradoException {
         System.out.println("Digite o codigo do produto");
         int produtoId = inp.nextInt();
-        Produto ProdutoEncontrado = produtos.get(produtoId);
-
-        if (ProdutoEncontrado == null) {
-            throw new ProdutoNaoEncontradoException();
-        }
-
-        produtos.remove(produtoId);
+        
+        produtoRepositorio.deletar(produtoRepositorio.buscarPorIdOuFalhar(produtoId).getId());
         System.out.println("produto removido com sucesso");
 
     }
 
-    public Produto pegarProduto() throws ProdutoNaoEncontradoException {
+    public Produto pegarProduto() throws NaoEncontradoException {
         System.out.println("Digite o codigo do produto");
         int produtoId = inp.nextInt();
-        Produto ProdutoEncontrado = produtos.get(produtoId);
+        Produto produtoEncontrado = produtoRepositorio.buscarPorIdOuFalhar(produtoId);
 
-        if (ProdutoEncontrado == null) {
-            throw new ProdutoNaoEncontradoException();
-        }
 
-        return ProdutoEncontrado;
+        return produtoEncontrado;
     }
 
     public void mostrarProdutos() {
 
-        for (int produtoId : produtos.keySet()) {
-
-            System.out.println(produtos.get(produtoId));
+        for (Produto produto : produtoRepositorio.buscarTodos()) {
+            System.out.println(produto);
         }
     }
 
-    public void editaProduto() throws ProdutoNaoEncontradoException, CategoriaNaoEncontradaException {
+    public void editaProduto() throws NaoEncontradoException {
         System.out.println("Digite o codigo do produto");
         int produtoId = inp.nextInt();
         String nome;
@@ -133,33 +119,24 @@ public class ProdutoController {
         System.out.println("Digite o codigo da categoria");
         categoriaId = inp.nextInt();
 
-        Produto ProdutoEncontrado = produtos.get(produtoId);
+        Produto produtoEncontrado = produtoRepositorio.buscarPorIdOuFalhar(produtoId);
 
-        if (ProdutoEncontrado == null) {
-            throw new ProdutoNaoEncontradoException();
-        }
-        try {
-            categoria = categoriaController.pegarCategoria(categoriaId);
-            ProdutoEncontrado.setNome(nome);
-            ProdutoEncontrado.setQuantidade(quantidade);
-            ProdutoEncontrado.setPreco(preco);
-            ProdutoEncontrado.setDesconto(desconto);
-            ProdutoEncontrado.setCodigoBarras(codigoBarras);
-            ProdutoEncontrado.setCategoria(categoria);
-        } catch (Exception e) {
-            throw e;
-        }
+        categoria = categoriaRepositorio.buscarPorIdOuFalhar(categoriaId);
+        produtoEncontrado.setNome(nome);
+        produtoEncontrado.setQuantidade(quantidade);
+        produtoEncontrado.setPreco(preco);
+        produtoEncontrado.setDesconto(desconto);
+        produtoEncontrado.setCodigoBarras(codigoBarras);
+        produtoEncontrado.setCategoria(categoria);
+       
         System.out.println("Produto editado com sucesso");
     }
 
-    public void verProduto() throws ProdutoNaoEncontradoException {
+    public void verProduto() throws NaoEncontradoException {
         System.out.println("Digite o codigo do produto");
         int produtoId = inp.nextInt();
 
-        Produto produtoEncontrado = produtos.get(produtoId);
-
-        if (produtoEncontrado == null)
-            throw new ProdutoNaoEncontradoException();
+        Produto produtoEncontrado = produtoRepositorio.buscarPorIdOuFalhar(produtoId);
 
         System.out.println(produtoEncontrado);
 

@@ -23,7 +23,7 @@ public class Carrinho {
 	}
 
 	public void removeProduto(int posicaoProduto){
-
+		System.out.println(produtos.size());
 		produtos.remove(posicaoProduto);
 		
 	}
