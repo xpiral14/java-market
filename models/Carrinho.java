@@ -1,10 +1,11 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Carrinho {
     
-    List<Produto> produtos;
+    private List<Produto> produtos = new ArrayList<Produto>();
 
     public void esvaziarCarrinho(){
 
@@ -20,6 +21,13 @@ public class Carrinho {
 
 		produtos.add(produto);
 	}
+
+	public void removeProduto(int posicaoProduto){
+
+		produtos.remove(posicaoProduto);
+		
+	}
+
 	public void setProdutos(List<Produto> produtos) {
 		this.produtos = produtos;
 	}

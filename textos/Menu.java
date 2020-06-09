@@ -1,12 +1,14 @@
 package textos;
 
 public class Menu {
+
     
     public void principal(){
         System.out.println("[0] - Sair");
         System.out.println("[1] - Produtos");
         System.out.println("[2] - Categorias");
         System.out.println("[3] - Caixa");
+        System.out.println("[4] - Mercado");
     }
     public void produto(){
         System.out.println("[1] - Ver produto");
@@ -27,14 +29,23 @@ public class Menu {
     
     public void caixa(){
         System.out.println("[0] - Voltar");
-        System.out.println("[1] - Adicionar caixa");
-        System.out.println("[2] - Remover caixa");
-        System.out.println("[3] - Ver fila");
-        System.out.println("[4] - Atender carrinho");
+        System.out.println("[1] - Ver fila");
+        System.out.println("[2] - Atender carrinho");
         
+    }
+    
+    public void mercado(){
+        System.out.println("[0] - Voltar");
+        System.out.println("[1] - Ver produtos");
+        System.out.println("[2] - Ver carrinho");
+        System.out.println("[3] - Adicionar produto ao carrinho");
+        System.out.println("[4] - Remover produto do carrinho");
+        System.out.println("[5] - Ir ao caixa");
+
     }
 
     public void cofre(){
 
     }
 }
+

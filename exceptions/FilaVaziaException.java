@@ -5,6 +5,6 @@ public class FilaVaziaException extends Exception {
 
     public FilaVaziaException() {
 
-        super("Categoria nao encontrada");
+        super("A fila está vazia");
     }
 }

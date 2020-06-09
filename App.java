@@ -3,8 +3,10 @@ import java.util.Scanner;
 
 import controllers.CaixaController;
 import controllers.CategoriaController;
+import controllers.MercadoController;
 import controllers.ProdutoController;
 import models.Caixa;
+import models.Carrinho;
 import models.Categoria;
 import models.Produto;
 import seeds.CategoriaSeed;
@@ -12,29 +14,35 @@ import seeds.ProdutoSeed;
 import textos.Menu;
 
 public class App {
+    private Menu menu = new Menu();
+
     private Scanner inp = new Scanner(System.in);
 
     private HashMap<Integer, Produto> produtos = new HashMap<Integer, Produto>();
 
     private HashMap<Integer, Categoria> categorias = new HashMap<Integer, Categoria>();
 
-    private HashMap<Integer, Caixa> caixas = new HashMap<Integer, Caixa>();
+    private Caixa caixa = new Caixa();
+
+    private Carrinho carrinho = new Carrinho();
 
     private CategoriaController categoriaController = new CategoriaController(categorias, produtos);
 
     private ProdutoController produtoController = new ProdutoController(produtos, categorias);
-    private Menu menu = new Menu();
+
     
-    private CaixaController caixaController = new CaixaController(caixas);
+    private MercadoController mercadoController = new MercadoController(produtos, carrinho);
+
+    private CaixaController caixaController = new CaixaController(caixa);
 
     public void iniciar() {
         ProdutoSeed.popular(produtos);
         CategoriaSeed.popular(categorias);
-        
+
         int opcaoSelecionda = -1;
         do {
             try {
-                menu.principal();;
+                menu.principal();
                 opcaoSelecionda = inp.nextInt();
                 selecionaOpcao(opcaoSelecionda);
 
@@ -74,8 +82,17 @@ public class App {
                     menu.caixa();
                     opcao = inp.nextInt();
                     selecionaOpcaoCaixa(opcao);
+                    break;
                 }
 
+                case 4:
+                    menu.mercado();
+                    opcao = inp.nextInt();
+                    selecionaOpcaoMercado(opcao);
+                    break;
+                default: 
+                    System.out.println("Opcao invalida");
+                break;
             }
             opcao = -1;
         } while (opcao != 0 && opcao != -1);
@@ -146,16 +163,35 @@ public class App {
             case 0:                
                 break;
             case 1: 
-                caixaController.adicionaCaixa();
+            caixaController.verFila();
                 break;
             case 2: 
-                caixaController.removeCaixa();
+                caixaController.atenderCarrinho();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void selecionaOpcaoMercado(int opcao) throws Exception{
+        switch (opcao) {
+            case 0:
+
+                break;
+            case 1:
+                mercadoController.verProdutos();
+                break;
+            case 2: 
+                mercadoController.verCarrinho();
                 break;
             case 3:
-                caixaController.verFila();
+                mercadoController.adicionaProdutoCarrinho();
+            break;
+            case 4:
+                mercadoController.removeProdutoCarrinho();
                 break;
-            case 4: 
-                caixaController.atenderCarrinho();
+            case 5:
+                caixaController.adicionaCarrinho(carrinho);
                 break;
             default:
                 break;

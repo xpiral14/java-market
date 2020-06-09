@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Caixa {
-    private int id;
     private double montante;
 	private List<Carrinho> fila;
 
 
-	public Caixa(int id){
-		this.id = id;
+	public Caixa(){
 		fila = new ArrayList<Carrinho>();
 	}
 
@@ -43,13 +41,6 @@ public class Caixa {
 		return valorMontante; 
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public void setFila(List<Carrinho> fila) {
 		this.fila = fila;
