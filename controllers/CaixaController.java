@@ -1,7 +1,6 @@
 package controllers;
 
-import java.util.HashMap;
-import java.util.Scanner;
+// import java.util.Scanner;
 
 import exceptions.FilaVaziaException;
 import exceptions.NaoEncontradoException;
@@ -11,50 +10,20 @@ import models.Produto;
 
 public class CaixaController {
     
-    private Scanner inp = new Scanner(System.in);
-    private HashMap<Integer, Caixa> caixas;
+    // private Scanner inp = new Scanner(System.in);
+    private Caixa caixa;
 
     
-    public CaixaController(HashMap<Integer,Caixa> caixas){
-
-        this.caixas = caixas;
-    }
-
-    public void adicionaCaixa(){
-        caixas.put(caixas.size(),new Caixa(caixas.size()));
-        System.out.println("Caixa criado com sucesso");
-    }
-
-    public void removeCaixa() throws Exception{
-        Caixa caixa =  selecionaCaixa();
-
-        caixas.remove(caixa.getId());
+    public CaixaController(Caixa caixa){
+        this.caixa = caixa;
     }
 
 
-    public void verCaixa() throws NaoEncontradoException{
-        Caixa caixa = selecionaCaixa();
-        caixas.remove(caixa.getId());
-    }
-
-    public Caixa selecionaCaixa() throws NaoEncontradoException{
-        int codigoCaixa;
-        System.out.println("Digite o codigo do caixa");
-        codigoCaixa = inp.nextInt();
-
-        Caixa caixaEncontrado = caixas.get(codigoCaixa);
-        if(caixaEncontrado == null) throw new NaoEncontradoException("Caixa nao encontrado");
-
-        return caixaEncontrado;
-    }
-
+ 
+ 
     public void atenderCarrinho() throws FilaVaziaException, NaoEncontradoException{
         
         double valorCarrinho = 0;
-
-        Caixa caixa = selecionaCaixa();
-
-        if(caixa == null) throw new NaoEncontradoException("Caixa nao encontrado");
 
         if(caixa.getFila().isEmpty()) throw new FilaVaziaException();
 
@@ -73,19 +42,11 @@ public class CaixaController {
     }
 
     public void adicionaCarrinho(Carrinho carrinho) throws NaoEncontradoException{
-        int codigoCaixa;
-        System.out.println("Digite o codigo do caixa");
-        codigoCaixa = inp.nextInt();
-
-        Caixa caixa = caixas.get(codigoCaixa);
-        if(caixa == null) throw new NaoEncontradoException("Caixa nao encontrado");
-
 
         caixa.adicionaNaFila(carrinho);
     }
 
     public void verFila() throws NaoEncontradoException{
-        Caixa caixa = selecionaCaixa();
 
         System.out.println("o caixa atualmente tem " + caixa.getFila().size() + "carrinho(s) na fila" );
     }
